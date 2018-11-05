@@ -1,28 +1,71 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext, useEffect } from "react";
+import { connect, Store, Provider } from "./store";
+import logo from "./logo.svg";
+import "./App.css";
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
+const mapStateToProps = (state, props) => ({
+  message: `${state.data} ${props.extra}`
+});
+
+const mapDispatchToProps = dispatch => ({
+  sendMsg: () => dispatch({ type: "RESET_DATA", payload: "null" })
+});
+
+const Data = props => {
+  return (
+    <div>
+      {props.message}
+      <button onClick={() => props.sendMsg()}>
+        Reset From MapDispatchToProps Function
+      </button>
+    </div>
+  );
+};
+
+const ConnectedData = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Data);
+
+const Controls = () => {
+  const { state, dispatch } = useContext(Store);
+
+  useEffect(() => {
+    if (!state.data) {
+      dispatch({ type: "FETCH_DATA", payload: "Ready!" });
+    }
+  });
+
+  return (
+    <div>
+      <button
+        onClick={() =>
+          dispatch({ type: "FETCH_DATA", payload: "Hello world!" })
+        }
+      >
+        Fetch Data
+      </button>
+      <button onClick={() => dispatch({ type: "RESET_DATA", payload: null })}>
+        Reset
+      </button>
+    </div>
+  );
+};
+
+const App = () => {
+  return (
+    <div className="App">
+      <Provider>
+        {/* This is an equivalent to the react-redux Provider component */}
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+          <h1>React {React.version}</h1>
+          <Controls />
+          <ConnectedData extra="TEST" />
         </header>
-      </div>
-    );
-  }
-}
+      </Provider>
+    </div>
+  );
+};
 
 export default App;
