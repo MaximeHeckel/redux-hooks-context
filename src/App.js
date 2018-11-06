@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { connect, Store, Provider } from "./store";
 import logo from "./logo.svg";
 import "./App.css";
@@ -22,19 +22,15 @@ const Data = props => {
   );
 };
 
+// An example of functional component using the connect HoC (works also with classes)
 const ConnectedData = connect(
   mapStateToProps,
   mapDispatchToProps
 )(Data);
 
+// An example of functional component using the useContext
 const Controls = () => {
-  const { state, dispatch } = useContext(Store);
-
-  useEffect(() => {
-    if (!state.data) {
-      dispatch({ type: "FETCH_DATA", payload: "Ready!" });
-    }
-  });
+  const { dispatch } = useContext(Store);
 
   return (
     <div>
