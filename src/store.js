@@ -45,6 +45,7 @@ const connect = (
         dispatch={dispatch}
         {...mapStateToProps(state, props)}
         {...mapDispatchToProps(dispatch)}
+        {...props}
       />
     );
   };
